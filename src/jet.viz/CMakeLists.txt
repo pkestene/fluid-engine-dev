@@ -7,7 +7,7 @@
 #
 
 # Target name
-set(target jet)
+set(target jet.viz)
 
 # Define
 set(root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../..)
@@ -15,7 +15,7 @@ set(root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 # Includes
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/gl3w
 )
 
 # Sources
@@ -25,27 +25,27 @@ file(GLOB header_dir
 file(GLOB headers
     ${header_dir}/*.h
     ${header_dir}/detail/*.h)
-list(REMOVE_ITEM headers ${header_dir}/jet.h)
+list(REMOVE_ITEM headers ${header_dir}/jet.viz.h)
 
 file(GLOB sources
     ${headers}
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/obj/*.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/gl3w/GL/gl3w.cpp)
 
 # Custom-build event
-set(jet_header_gen_py ${root_dir}/scripts/header_gen.py)
+set(jet_viz_header_gen_py ${root_dir}/scripts/header_gen.py)
 add_custom_command(
-    COMMAND python ${jet_header_gen_py}
+    COMMAND python ${jet_viz_header_gen_py} jet.viz
     DEPENDS ${headers}
-    OUTPUT ${root_dir}/include/jet/jet.h
+    OUTPUT ${root_dir}/include/jet.viz/jet.viz.h
 )
-add_custom_target(jet_header_gen_py ALL
-    DEPENDS ${root_dir}/include/jet/jet.h)
+add_custom_target(jet_viz_header_gen_py ALL
+    DEPENDS ${root_dir}/include/jet.viz/jet.viz.h)
 
 # Build library
 add_library(${target}
     ${sources})
-add_dependencies(${target} jet_header_gen_py)
+add_dependencies(${target} jet_viz_header_gen_py)
 
 # Project options
 set_target_properties(${target}

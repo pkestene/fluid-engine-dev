@@ -32,6 +32,20 @@ git clone https://github.com/doyubkim/fluid-engine-dev.git --recursive
 cd fluid-engine-dev
 ```
 
+On macOS and Ubuntu, install the dependencies using platform-specific package managers
+
+macOS:
+
+```
+brew install glfw
+```
+
+Ubuntu:
+
+```
+sudo apt-get install libglfw3-dev
+```
+
 ### Python API
 
 Build and install the package by running
