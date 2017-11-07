@@ -2,7 +2,7 @@
 
 mkdir build
 cd build
-cmake ..
+cmake .. -DENABLE_CUDA=OFF
 make -j`nproc`
 bin/unit_tests
 cd ..

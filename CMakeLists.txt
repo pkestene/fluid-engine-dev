@@ -7,7 +7,7 @@
 #
 
 # CMake version
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 # Include cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -38,6 +38,9 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Options
+option(ENABLE_CUDA "Enable CUDA Feature" ON)
+
 # Overrides
 set(CMAKE_MACOSX_RPATH ON)
 
@@ -57,23 +60,14 @@ add_custom_target(unzip_py ALL
         DEPENDS ${RESOURCES_OBJS})
 
 # Project modules
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(BUILD_GTEST ON)
-    set(BUILD_GMOCK OFF)
-else()
-    set(BUILD_GTEST 1)
-    set(BUILD_GMOCK 0)
-endif()
+set(BUILD_GTEST 1)
+set(BUILD_GMOCK 0)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 if ((CMAKE_VERSION VERSION_EQUAL 3.3) OR (CMAKE_VERSION VERSION_GREATER 3.3))
     cmake_policy(SET CMP0063 NEW)
 endif()
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(BENCHMARK_ENABLE_TESTING OFF)
-else()
-    set(BENCHMARK_ENABLE_TESTING 0)
-endif()
+set(BENCHMARK_ENABLE_TESTING 0)
 add_subdirectory(external/googlebenchmark)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
