@@ -34,7 +34,7 @@ matrix:
       compiler: clang
       before_install:
         - brew update
-        - brew install glfw
+        - brew install glfw ispc
       script:
         - sh scripts/travis_build.sh
     # Test OS X 10.12 + Xcode 8.3 + clang
@@ -43,7 +43,7 @@ matrix:
       compiler: clang
       before_install:
         - brew update
-        - brew install glfw
+        - brew install glfw ispc
       script:
         - sh scripts/travis_build.sh
     # Test OS X 10.12 + Xcode 9 + clang
@@ -52,6 +52,6 @@ matrix:
       compiler: clang
       before_install:
         - brew update
-        - brew install glfw
+        - brew install glfw ispc
       script:
         - sh scripts/travis_build.sh

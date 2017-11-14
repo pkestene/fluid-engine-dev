@@ -21,19 +21,19 @@ using namespace jet;
 using namespace viz;
 
 // MARK: Global variables
-static size_t sN = 128;
+static size_t sN = 256 + 2;
 static Frame sFrame{0, 1.0 / 60.0};
-static GridSmokeSolver2Ptr sSolver;
+static ExpGridFluidSolver2Ptr sSolver;
 static ImageRenderablePtr sRenderable;
 static ByteImage sImage;
 
 // MARK: Rendering
 void densityToImage() {
-    const auto den = sSolver->smokeDensity()->dataAccessor();
+    const auto den = sSolver->density();
     sImage.resize(sN, sN);
     for (size_t i = 0; i < sN; i++) {
         for (size_t j = 0; j < sN; j++) {
-            const double d = clamp(den(i, j), 0.0, 1.0);
+            const float d = clamp((float)den(i, j), 0.0f, 1.0f);
             const auto bd = static_cast<uint8_t>(d * 255);
             ByteColor color{bd, bd, bd, 255};
             sImage(i, j) = color;
@@ -105,22 +105,24 @@ int main(int, const char**) {
     GLFWApp::initialize();
 
     // Setup sSolver
-    sSolver = GridSmokeSolver2::builder()
-                  .withResolution({sN, sN})
-                  .withDomainSizeX(1.0)
-                  .makeShared();
-    auto pressureSolver =
-        std::make_shared<GridFractionalSinglePhasePressureSolver2>();
-    pressureSolver->setLinearSystemSolver(
-        std::make_shared<FdmGaussSeidelSolver2>(20, 20, 0.001));
-    sSolver->setPressureSolver(pressureSolver);
-    auto sphere =
-        Sphere2::builder().withCenter({0.5, 0.2}).withRadius(0.15).makeShared();
-    auto emitter =
-        VolumeGridEmitter2::builder().withSourceRegion(sphere).makeShared();
-    sSolver->setEmitter(emitter);
-    emitter->addStepFunctionTarget(sSolver->smokeDensity(), 0.0, 1.0);
-    emitter->addStepFunctionTarget(sSolver->temperature(), 0.0, 1.0);
+    sSolver = std::make_shared<ExpGridFluidSolver2>();
+    sSolver->resizeGrid({sN, sN}, {1.0 / sN, 1.0 / sN}, {0.0, 0.0});
+//    sSolver = GridSmokeSolver2::builder()
+//                  .withResolution({sN, sN})
+//                  .withDomainSizeX(1.0)
+//                  .makeShared();
+//    auto pressureSolver =
+//        std::make_shared<GridFractionalSinglePhasePressureSolver2>();
+//    pressureSolver->setLinearSystemSolver(
+//        std::make_shared<FdmGaussSeidelSolver2>(20, 20, 0.001));
+//    sSolver->setPressureSolver(pressureSolver);
+//    auto sphere =
+//        Sphere2::builder().withCenter({0.5, 0.2}).withRadius(0.15).makeShared();
+//    auto emitter =
+//        VolumeGridEmitter2::builder().withSourceRegion(sphere).makeShared();
+//    sSolver->setEmitter(emitter);
+//    emitter->addStepFunctionTarget(sSolver->smokeDensity(), 0.0, 1.0);
+//    emitter->addStepFunctionTarget(sSolver->temperature(), 0.0, 1.0);
 
     // Create GLFW window
     GLFWWindowPtr window = GLFWApp::createWindow("Smoke Sim 2D", 512, 512);
