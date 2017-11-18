@@ -7,3 +7,7 @@
 [submodule "external/googlebenchmark"]
 	path = external/googlebenchmark
 	url = https://github.com/google/benchmark.git
+[submodule "external/kokkos"]
+	path = external/kokkos
+	url = https://github.com/kokkos/kokkos.git
+	branch = develop

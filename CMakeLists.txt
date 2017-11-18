@@ -7,7 +7,7 @@
 #
 
 # CMake version
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 # Include cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -79,6 +79,11 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 add_subdirectory(external/cnpy)
 add_subdirectory(external/pystring)
+
+add_subdirectory(external/kokkos)
+# pass Kokkos include directories to our target application
+include_directories(${Kokkos_INCLUDE_DIRS_RET})
+
 add_subdirectory(src/jet)
 add_subdirectory(src/tests/manual_tests)
 add_subdirectory(src/tests/mem_perf_tests)
